@@ -26,7 +26,7 @@ Width = 600
 Height = 600
 mainWindow = pygame.display.set_mode((Width, Height))
 mainWindow.fill(white)
-font = pygame.font.Font('bgothl.ttf', 50)
+font = pygame.font.Font('data/bgothl.ttf', 50)
 text = font.render("Dhruv's Tic Tac Toe", True, black)
 text_rect = text.get_rect(center=(Width / 2, Height / 2))
 mainWindow.blit(text, text_rect)
@@ -47,7 +47,7 @@ while (not gameover):
     aiturn = 0
 
     # Window
-    bgImage = pygame.image.load("bgimage.jpg")
+    bgImage = pygame.image.load("data/bgimage.jpg")
     bgImage = pygame.transform.scale(bgImage, (Width, Height))
     mainWindow.blit(bgImage, (0, 0))
     pygame.display.set_caption("Tic Tae Toe")
