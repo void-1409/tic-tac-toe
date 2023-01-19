@@ -1,12 +1,11 @@
 import pygame
-from time import sleep
+import sys
 from numpy import zeros
-from tkinter import Tk
 from tkinter import messagebox
-from gridlines import Grid
-from boardupdate import Update
-from gamelogic import Logic
-from aiLogic import AI
+from Logic.gridlines import Grid
+from Logic.boardupdate import Update
+from Logic.gamelogic import Logic
+from Logic.aiLogic import AI
 
 pygame.init()
 
@@ -15,11 +14,7 @@ white = (255, 255, 255)
 black = (0, 0, 0)
 
 # variables
-exitgame = False
 gameover = False
-
-root = Tk()
-root.withdraw()
 
 # Window Setup
 Width = 600
@@ -31,11 +26,16 @@ text = font.render("Dhruv's Tic Tac Toe", True, black)
 text_rect = text.get_rect(center=(Width / 2, Height / 2))
 mainWindow.blit(text, text_rect)
 pygame.display.update()
-sleep(1)
+pygame.time.wait(1000)
+
+if (messagebox.askyesno("with AI", "Do you want to play with AI?")):
+    withAI = True
+else:
+    withAI = False
 
 while (not gameover):
     # Initialize
-    withAI = False
+    restart = False
     gameBoard = zeros((3, 3), dtype=int)
     grid = Grid()
     logic = Logic()
@@ -52,23 +52,16 @@ while (not gameover):
     mainWindow.blit(bgImage, (0, 0))
     pygame.display.set_caption("Tic Tae Toe")
 
-    # Asking for AI
-    if(messagebox.askyesno("With AI", "Do you want to play with AI?!")):
-        withAI = True
-
     # Game loop
-    while (not exitgame):
+    while (not restart):
         grid.draw(black, mainWindow)
         for event in pygame.event.get():
             if (event.type == pygame.QUIT):
-                if(messagebox.askokcancel("Quit", "Are you sure want to quit the game?!")):
-                    exitgame = True
-                    break
+                if(messagebox.askyesno("Quit", "Are you sure want to quit the game?!")):
+                    sys.exit()
             if (event.type == pygame.KEYDOWN):
                 if (event.key == pygame.K_r):
-                    gameover = True
-                    exitgame = True
-                    break
+                    restart = True
             if (event.type == pygame.MOUSEBUTTONDOWN):
                 if (pygame.mouse.get_pressed()[0]):
                     Position = pygame.mouse.get_pos()
@@ -76,7 +69,7 @@ while (not gameover):
                         boardUpdate.playerTurn(Position, playercount, gameBoard)
                         playercount += 1
                     else:
-                        messagebox.showwarning("Taken", "Place already taken!!")
+                        messagebox.showwarning("Taken!", "Place is already taken!")
                     winner, result = logic.checkboard(gameBoard, mainWindow)
                     pygame.display.update()
                     if (result):
@@ -84,9 +77,7 @@ while (not gameover):
                             messagebox.showinfo("Game Over", "It's a draw!!")
                         else:
                             messagebox.showinfo("Game Over", f"Player {winner} won the game!!")
-                        gameover = True
-                        exitgame = True
-                        break
+                        restart = True
 
                     if (withAI):
                         move = aiLogic.eval(gameBoard, aiturn)
@@ -103,20 +94,12 @@ while (not gameover):
                                 messagebox.showinfo("Game Over", f"Player {winner} won the game!!")
                             else:
                                 messagebox.showinfo("Game Over", f"AI won the game!!")
-                            gameover = True
-                            exitgame = True
+                            restart = True
 
         pygame.display.update()
 
-    # exit control
-    if (gameover):
-        if (messagebox.askokcancel("Restart", "Do you want to restart the game?!")):
-            gameover = False
-            exitgame = False
-        else:
+        # exit control
+        if (restart):
             break
-
-    if (exitgame):
-        break
 
 pygame.quit()

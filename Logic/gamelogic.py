@@ -1,5 +1,5 @@
 from numpy import transpose, min, max, all
-from gridlines import Grid
+from Logic.gridlines import Grid
 
 grid = Grid()
 
