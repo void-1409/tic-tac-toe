@@ -18,7 +18,7 @@ cd tic-tac-toe
 ```
 pip install -r requirements.txt
 ```
-4. Run main.py to play the game.
+4. Run **main.py** to play the game.
 ```
 python main.py
 ```
